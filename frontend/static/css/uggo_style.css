@@ -1,0 +1,305 @@
+/* --- Variables --- */
+:root {
+	--challengeBoxWidth: 280px;	/*Enough to contain  collapsible markings without expanding or having Mark button on separate row*/
+
+	--markingSelectorHeight: 25px;
+	--markingSelectorWidth: 25px;
+	--markingHeight: 20px;
+	--markingWidth: 20px;
+
+	--greenChallenge: DarkGreen;
+	--inputColor: Turquoise;
+
+	--panelHeight: 300px;
+}
+
+
+/* --- Global changes --- */
+
+/* Entire page */
+html {
+	background:url("/static/img/stars.png");    /*Would've liked GIF but it takes up CPU*/
+	background-color: DarkSlateGray;  /*Backup background*/
+    background-size: cover;  /*Expand to fit. If image too large, it does not shrink, instead you will see a zoomed-in version. I like that adding additional challenges will zoom in more on the background.*/
+	
+	margin: 0px;
+	padding: 0px;
+}
+
+/* All contens within body (subject to growing/shrinking) */
+body {
+	margin: 0px;
+	padding: 25px;
+}
+
+/* All type of texts used */
+h1,h2,h3,h4,h5,p,span {
+	color: LightGoldenRodYellow;
+}
+
+p {
+	margin: 0px;
+}
+
+/* All buttons used */
+button, input[type="submit"], input[type="radio"] {		/*most if these dont apply to radio buttons but eg. cursor:pointer does*/
+	color: LightGoldenRodYellow;
+	/* background-color: SlateGray; */
+	background-color: rgba(80,80,80,1.0);
+	border: 2px outset black;
+	cursor: pointer;
+}
+button:active, input[type="submit"]:active {	/*Override built-in on-click because that border is too white*/
+	border: 2px inset black;
+}
+
+
+
+
+
+/* --- Non-global changes --- */
+
+/*TODO: Would be nice to find a way to spice up the title a little bit more so it isnt just plain text*/
+.pageTitle {
+	display: block;
+	text-align: center;
+	margin: 0px;
+	margin-bottom: 30px;
+}
+
+
+#panel {
+	display: block;
+	height: var(--panelHeight);		/*Should contain everything*/
+}
+#panel h2 {
+	margin: 0px;
+	margin-bottom: 20px;
+}
+.panelDiv {
+	display: inline-block;
+	border: 5px solid black;
+	background: rgba(40,40,40,0.7);
+	padding: 10px;
+	vertical-align: top;
+}
+.panelDiv h2 {
+	margin: 0px;
+	margin-bottom: 20px;
+	text-align: center;
+}
+.panelDiv h3 {
+	margin: 0px;
+	margin-bottom: 10px;
+}
+.panelDiv form {
+	margin: 0px;
+	margin-bottom: 15px;
+}
+.panelDiv input[type="text"] {
+	margin: 0px;
+	margin-bottom: 5px;
+	/* border-radius: 3px; */
+	background: rgba(50,50,50);
+	color: var(--inputColor);
+	border: 2px inset DimGray;
+}
+.panelDiv input[type="text"]:focus {	/*Text input on-click*/
+	background: rgba(90,90,90)
+}
+
+#legend {
+	display: inline-block;
+	float: right;
+	max-width: 500px;			/*Some occupy 2 rows, but none occupy 3*/
+	max-height: 160px;
+	padding: 10px;
+	background-color: rgb(70, 70, 70, 0.7);
+	border: 5px outset rgba(10,10,10,1.0);
+	border-radius: 15px;
+  	/* overflow: auto; */
+  	/* word-wrap: break-word; */	
+}
+#legend h3 {
+	display: block;
+	margin: 0px;
+	margin-bottom: 10px;
+	text-align: center;
+}
+.legendContents {
+	column-count: 2;
+	column-gap: 15px;
+}
+.legendText {
+	display: inline;
+}
+
+
+
+
+#challenge_container {
+	display: block;
+}
+
+.ChallengeBox {
+  display: inline-block;
+  width: var(--challengeBoxWidth);
+  min-height: 155px;		/*Enough to contain 2-row title + 2 non-recommend user markings without expanding*/
+  border: 4px solid black;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 10px;
+  margin-left: 0px;		/*Override to 0, otherwise it looks wack*/
+  background-color: var(--greenChallenge);
+  overflow: auto;		/*Crucial against OCD.*/
+  word-wrap: break-word;
+  opacity: 0.95;			/*The background is nice, let's let it through a little*/
+}
+.challengeBoxHeader {
+	display: block;	
+	margin: 0px;
+	margin-bottom: 10px;
+}
+.challengeBoxHeader h3 {
+	margin: 0px;
+	display: inline-block;
+	max-width: calc(var(--challengeBoxWidth) - 45px );	/*Hardcoded latter value, but it ensures that the delete button is always top-right no matter how long the challenge name*/
+}
+.challengeBoxHeader .deleteChallengeButton {
+	display: inline-block;
+	float: right;
+	/*vertical-align: bottom;*/		/*This does not work unfortunately, due to the float*/
+	margin-top: 3px;				/*Ugly solution to center it to the text...*/
+	padding: 0px;
+}
+
+
+/*There should probably be a .body div here containing the challenge options including the collapsibles*/
+
+.markAsButton {
+	display: block;  /*On separate row from title and delbutton*/
+}
+
+/*In here is some magic to make radio buttons clickable and appear as colored squares*/
+
+.markCollapsible {
+	margin: 10px;	/*It's slightly indented, looks good*/
+}
+/* These radio buttons are inside a label, and are not displayed. Only the label is displayed and clickable. */
+.markCollapsible input[name="marking"] {
+	display: none;
+}
+
+.markLabel {
+  display: inline-block;
+  margin-right: 5px;
+  width: var(--markingSelectorWidth);
+  height: var(--markingSelectorHeight);
+  cursor: pointer;
+}
+/* "0": "markRed",			//I am attempting */
+/* "1": "markOrange",		//I want to attempt later */
+/* "2": "markYellow",		//I have made progress but stopped attempting */
+/* "3": "markBlack",		//Here be dragons */
+/* "4": "markRecommend",	//I think person X would be perfect for this */
+/* "5": "markSolved",		//Solved (alternative to just deleting the entire challenge container) */
+/* "6": "markRemove" 		//I don't wish to have a marking on this challenge	 */
+.markGreen { background-color: var(--greenChallenge); }  /*Not available for marking, rather automatically applied appropriately*/
+.markRed { background-color: red; }
+.markOrange { background-color: orange; }
+.markYellow { background-color: yellow; }
+.markBlack { background-color: black; }
+.markRecommend { background-color: DeepSkyBlue; }
+.markSolved { background-color: grey; }
+.markRemove { background-color: Purple; }
+
+
+/* .markLabel:has(input[name="marking"]:checked) {		This is a newer way to modify parent selector when something happens to a child, like :hover or :checked. It's too new of a feature unfortunately. */
+
+/* Instead, I do this hack: If radio button (colored square) is checked, make it (actually the span next to it) have border*/
+.markCollapsible input[name="marking"]:checked + span {
+	--borderSize: 3px;
+	display: block;
+	width: calc(var(--markingSelectorWidth) - var(--borderSize));
+	height: calc(var(--markingSelectorHeight) - var(--borderSize));
+	border: var(--borderSize) inset var(--inputColor);
+}
+
+.markButton {
+	/* margin: auto; */
+	display: inline-block;
+	float: right;
+	margin: 0px;
+	margin-top: 1px;	/*Another ugly hack because vertical-align wont work with float. At least it's just 1px, right?*/
+}
+
+
+
+.userListCollapsible {
+	margin: 0px;
+	margin-left: 10px;	/*Further (with respect to markings collapsible) indent 10px*/
+	margin-top: 5px;
+}
+.userListCollapsible label {
+	display: inline-block;
+	cursor: pointer;
+	
+}
+.userListCollapsible input {
+	/* TODO: Could style these a little bit if I want */
+}
+.userListCollapsible span {
+	/* background-color: var(--inputColor); */
+	color: var(--inputColor);
+
+	/*Something like this could be used but the overflow scrollbar is fine I think*/
+	/* display: block; */
+	/* width: 200px; */
+	/* word-wrap: break-word; */
+}
+
+
+
+.userMarkings {
+	display: block;
+	margin: 0px;
+	margin-top: 20px;
+	margin-bottom: 5px;
+}
+.markingsEntry {
+	display: block;
+	/* overflow: auto; */
+	word-wrap: break-word;
+}
+.coloredP {
+	display: inline-block;
+	width: var(--markingWidth);
+	height: var(--markingHeight);
+	vertical-align: bottom;			/*Makes it appear on the same level as the accompanying text*/
+}
+.markingUsernameText {
+	display: inline;
+	/* font-weight: bold; */
+}
+.markingRecommendText {
+	display: block;
+	font-style: italic;
+	font-size: 13px;
+	margin: 0px;
+	margin-left: calc(var(--markingWidth) + 13px);	/*The latter number is hardcoded which I don't like*/
+}
+.markingRecommendUserText {
+	/* font-weight: bold; */
+	margin: 0px;
+	margin-left: calc(var(--markingWidth) + 13px);
+}
+/*Looks awesome, unfortunately takes up a lot of processing power. Only blink for 4 seconds.*/
+.challengeForYou {
+	background-color: var(--greenChallenge);
+  	animation: blinker 2s linear 2;
+}
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}

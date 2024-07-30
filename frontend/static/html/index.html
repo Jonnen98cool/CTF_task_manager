@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<link rel="stylesheet" href="static/css/uggo_style.css">
+<link rel="icon" type="image/x-icon" href="static/img/favicon.ico">
+</head>
+
+<body>
+
+<h1 class="pageTitle" id="ctfTitle">Fetching from API...</h1>
+
+<div id="panel">
+<h2>Panel</h2>
+
+<div class="panelDiv" id="addChallengeDiv">
+<h3>Add New Challenge</h3>
+<form>
+  <input type="text" name="cname" placeholder="Challenge name" size=25><br>
+  <input type="submit" value="Add challenge">
+</form> 
+</div>
+
+<!-- It makes more sense if the legend is placed inside #challenge_container but it looks better when placed here in the panel -->
+<div id="legend">
+<h3>Marking Legend</h3>
+<div class="legendContents">
+<p class="coloredP markGreen"></p>
+<p class="legendText">Up for grabs (unmarkable)</p> <br>
+<p class="coloredP markRed"></p>
+<p class="legendText">I am currently attempting</p> <br>
+<p class="coloredP markOrange"></p>
+<p class="legendText">I want to attempt later</p> <br>
+<p class="coloredP markYellow"></p>
+<p class="legendText">I made progress but stopped attempting (ask me for tips)</p> <br>
+<p class="coloredP markBlack"></p>
+<p class="legendText">Here be dragons</p> <br>
+<p class="coloredP markRecommend"></p>
+<p class="legendText">User X should try</p> <br>
+<p class="coloredP markSolved"></p>
+<p class="legendText">Challenge solved (alternative to deleting it)</p> <br>
+<p class="coloredP markRemove"></p>
+<p class="legendText">Remove your marking</p>
+</div>
+</div>
+
+</div>  <!-- panel end -->
+
+
+<div id="challenge_container">
+<h2>Challenges Area</h2>
+
+</div>
+
+
+<script src="static/js/utils.js"></script>
+<script src="static/js/fetch.js"></script>
+<script src="static/js/main.js"></script>
+</body>
+</html>
+
+
