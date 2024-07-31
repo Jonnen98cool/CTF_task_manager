@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<link rel="stylesheet" href="static/css/uggo_style.css">
+<link rel="icon" type="image/x-icon" href="static/img/favicon.ico">
+</head>
+
+<body>
+
+
+<h1 class="pageTitle">Admin Panel</h1>
+
+<div>
+
+<div class="panelDiv">
+
+<h2>Users</h2>
+<h3>Show Users</h3>
+<form action="/admin/show_users" method="get">
+<button type="submit">Show users</button>
+</form>
+
+<h3>Add User</h3>
+<form action="/admin/add_user" method="post">
+  <input type="text" name="username" placeholder="username"><br>
+  <input type="submit" value="Add user">
+</form> 
+
+<h3>Delete User</h3>
+<form action="/admin/delete_user" method="post">
+  <input type="text" name="id" placeholder="id"><br>
+  <input type="submit" value="Delete user">
+</form> 
+</div>
+
+
+<div class="panelDiv">
+<h2>Site</h2>
+
+<h3>Change CTF Name</h3>
+<form action="/admin/change_title" method="post">
+  <input type="text" name="title" placeholder="new title"><br>
+  <input type="submit" value="Change title">
+</form> 
+
+<h3>Clear Challenges</h3>
+<form action="/admin/clear_challenges" method="get">
+<button type="submit">Clear challenges</button>
+</form>
+
+<h3>Clear All</h3>
+<p>Clears challenges, all non-admin users, and ctf title</p>
+<form action="/admin/clear_all" method="get">
+<button type="submit">Clear all</button>
+</form>
+</div>
+
+</div>
+
+<!-- <script src="static/admin.js"></script> -->
+</body>
+</html>
