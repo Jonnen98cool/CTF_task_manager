@@ -246,7 +246,7 @@ function populateChallengeDiv(jsonData)
 			recommendedUser.innerHTML = rec_usr;
 			markingsEntry.appendChild(recommendedUser);
 
-			//If someone recommended YOU to do the challenge, highlight it  
+			//If someone recommended YOU to do the challenge, highlight it
 			if(rec_usr == getCookieValue("user")) { recommendedUser.classList.add("challengeForYou"); }
 		}
 
@@ -266,14 +266,14 @@ function populateChallengeDiv(jsonData)
 //Copied from https://www.w3schools.com/js/js_cookies.asp
 function getCookieValue(name)
 {
-	target = name + "=";
-	allCookies = decodeURIComponent(document.cookie);
+	let target = name + '=';
+	let allCookies = decodeURIComponent(document.cookie);
 	let cky = allCookies.split(';');
 
-	for(let i = 0; i < cky.length; i++)
+	for(let i=0; i < cky.length; i++)
 	{
 		let currentCookie = cky[i];
-		while (currentCookie.charAt(0) == " ") { currentCookie = currentCookie.substring(1); }
+		while (currentCookie.charAt(0) == ' ') { currentCookie = currentCookie.substring(1); }
 		if (currentCookie.indexOf(target) == 0) { return currentCookie.substring(target.length, currentCookie.length); }
 	}
   

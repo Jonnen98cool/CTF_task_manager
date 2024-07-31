@@ -52,7 +52,7 @@ def init_db(admin_user:str):
         # Add admin user
         admin_cookie = generate_auth_cookie()
         DB.db.session.add(DB.User(username=admin_user, password="unimplemented", session_id=admin_cookie, role="admin"))
-        print(f"\033[92mSERVER MESSAGE: Added user: {admin_user} as admin, your privileged session id is: {admin_cookie}\033[0m")
+        print(f"\033[94mAPP MESSAGE: Added user: {admin_user} as admin, your privileged session id is: {admin_cookie}\033[0m")
         
         f = open("instance/mydb.sqlite.bak", 'r')
         lines = f.read().splitlines()
@@ -64,7 +64,7 @@ def init_db(admin_user:str):
 
         try:
              DB.db.session.commit()
-        except Exception as e
+        except Exception as e:
             print(f"\033[91mAPP MESSAGE: There was an error initializing the db. Here is the stack trace:\n\033[0m")
             print(str(e))
     return

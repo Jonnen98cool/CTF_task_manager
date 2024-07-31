@@ -31,8 +31,8 @@ def login():
                 res.status = 400    # Not 401 since /login does not require authentication
             else:
                 res = make_response(redirect("/", code=302))
-                res.set_cookie("auth", value=user_row.session_id, max_age=None, expires=None, path='/', secure=None, httponly=True, samesite="Lax")
-                res.set_cookie("user", value=user_row.username, max_age=None, expires=None, path='/', secure=None, httponly=True, samesite="Lax")
+                res.set_cookie("auth", value=user_row.session_id, max_age=None, expires=None, path='/', secure=None, httponly=False, samesite="Lax")
+                res.set_cookie("user", value=user_row.username, max_age=None, expires=None, path='/', secure=None, httponly=False, samesite="Lax")
 
 
         return res
@@ -89,7 +89,7 @@ def landing():
     else:
         res = jsonified_db
         res.status = 200
-        if(set_cookie == True): res.set_cookie("user", value=username, max_age=None, expires=None, path='/', secure=None, httponly=True, samesite="Lax")
+        if(set_cookie == True): res.set_cookie("user", value=username, max_age=None, expires=None, path='/', secure=None, httponly=False, samesite="Lax")
         try:
             total_messages = DB.db.session.query(DB.Server).count()
             number = random.randint(2, total_messages)

@@ -1,4 +1,4 @@
-version: "3.8"          #Specify version to use, not sure what best practice is
+version: "2"          #Specify version to use, not sure what best practice is
 services:               #In here you define all the containers you want to run
 
   #Container 1
@@ -6,7 +6,7 @@ services:               #In here you define all the containers you want to run
     build: .            #Define directory in which this container's "Dockerfile" can be found
     #After the container has been built, run these commands on it.
     command: bash -c "
-        printf \"\033[92mAfter both two servers are launched, you may access the application on 127.0.0.1:5001. Users outside this network may access the app at your routers external interface ip (whatsmyip.org) and the port from which the router forwards/redirects to 5001. For example:   http://1.2.3.4:5002\n\033[0m\"
+        printf '\033[92mAfter both two servers are launched, you may access the application on 127.0.0.1:5001. Users outside this network may access the app at your routers external interface ip (whatsmyip.org) and the port from which the router forwards/redirects to 5001. For example   http://1.2.3.4:5002\n\033[0m'
         && printf \"\033[92mLaunching servers now...\n\033[0m\"
         && printf \"\033[92m\t  Launching Nginx reverse proxy server on this container's IP (IP is irrelevant, container is bridged) on port 5001\n\033[0m\"
         && nginx
