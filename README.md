@@ -15,7 +15,7 @@ Not tested, you are on your own. Using Linux in a VM is recommended.
 ## Usage (self-hosted)
 ### TLDR version
 1. Launch container: `ADMIN_USER="*your_username_here*" FRESH_DB=1 docker-compose up`
-2. Port forward router: ![](https://github.com/Jonnen98cool/CTF_task_manager/blob/main/readme_helper/router_port_forwarding_rule.png)
+2. Determine your PC's ip address (probably DHCP-assigned), port forward router: ![](https://github.com/Jonnen98cool/CTF_task_manager/blob/main/readme_helper/router_port_forwarding_rule.png)
 3. **(Optional, if running in VM)** Port forward VM: ![](https://github.com/Jonnen98cool/CTF_task_manager/blob/main/readme_helper/virtualbox_port_forwarding_rule.png)
 4. You are done, access app at `http://127.0.0.1:5001`, Tell your friends to access it at `http://*router_ip*:5002`
 
@@ -39,7 +39,7 @@ Not tested, you are on your own. Using Linux in a VM is recommended.
     - What you have configured so far:  
     Request from Internet to your router `http://*redacted*:5002` --> router port forwarding rule forwards request to service running at `192.168.0.100:5001` --> Virtualbox port forwarding rule engages, request forwarded to VM service running at `10.0.2.15:5001` --> VM docker container has port 5001 exposed and the network is bridged, so request gets sent to container Nginx server listening on 5001.
 
-4. **Using the app**: You should now be able to access the app at `http://127.0.0.1:5001`. Users outside of your internal network can access it with `http://*your_router_ip*:*router_public_port*`. Note that you will not be able to access the app at your routers external ip from within its internal network, you have to go through localhost. 
+4. **Using the app**: You should now be able to access the app at `http://127.0.0.1:5001`. Users outside of your internal network can access it with `http://*your_router_ip*:*router_public_port*` (find your router's external ip: [https://www.whatsmyip.org/](https://www.whatsmyip.org/) ). Note that you will not be able to access the app at your routers external ip from within its internal network, you have to go through localhost. 
     - Prevent the 401 error when accessing the app by logging in at `/login`. Your admin login credentials are shown in the container output in the form of a 32 char string, eg. `07b92a8a1eaa4297b2ad4f3aeda2d1ee`. After that you can add new users in `/admin`.
     - You can close the server by `Ctrl + c`:ing out of the container. You can start the server again with `FRESH_DB=0` to keep everything the way you left it.
   
