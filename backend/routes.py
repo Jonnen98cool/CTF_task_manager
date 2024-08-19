@@ -43,8 +43,10 @@ def login():
 @app.route("/", methods=["GET"])
 def index():
     #if(not utils.is_authenticated(request)): return "UNAUTHENTICATED", 401
-    # Showing this static content is OK, even for unauthorized users
-    return send_from_directory("frontend/static/html", "index.html")
+    if(not utils.is_authenticated(request)):
+        return send_from_directory("frontend/static/html", "unauth.html")
+    else:
+        return send_from_directory("frontend/static/html", "index.html")
     
 
 

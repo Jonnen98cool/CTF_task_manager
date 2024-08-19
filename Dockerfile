@@ -18,6 +18,7 @@ RUN    apt-get update -y \
 	&& apt-get install -y python3-pip \
 	&& pip install -r requirements.txt \
 	&& pip install gunicorn
+#	&& pip install ngxtop==0.0.3
 
 #Replace default nginx configuration
 COPY ./nginx.conf /etc/nginx/

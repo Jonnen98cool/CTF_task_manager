@@ -1,4 +1,4 @@
-version: "2"          #Specify version to use, not sure what best practice is
+version: "2"            #Specify version to use, not sure what best practice is
 services:               #In here you define all the containers you want to run
 
   #Container 1
@@ -20,3 +20,7 @@ services:               #In here you define all the containers you want to run
 
   #Container 2
   #...
+
+
+#watch -n 10 ./script.sh -d  #-d shows difference since last iteration
+#ngxtop -l /etc/nginx/nginx.conf print time_local remote_addr request status
