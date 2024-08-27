@@ -13,10 +13,21 @@
 <div id="panel">
 <h2>Panel</h2>
 
+<div class="panelDiv" id="addCategoryDiv">
+<h3>Add Challenge Category</h3>
+<form>
+  <input type="text" name="ccategory" placeholder="Category name" size=20><br>
+  <input type="submit" value="Add category">
+</form> 
+</div>
+
 <div class="panelDiv" id="addChallengeDiv">
 <h3>Add New Challenge</h3>
 <form>
   <input type="text" name="cname" placeholder="Challenge name" size=25><br>
+  <select name="ccategory">
+    <option value="none">Select category ...</option>
+  </select>
   <input type="submit" value="Add challenge">
 </form> 
 </div>

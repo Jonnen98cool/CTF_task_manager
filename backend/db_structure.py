@@ -15,8 +15,8 @@ db = SQLAlchemy(app) # This is our python db object. We use this to modify our a
 
 # Define tables and their columns
 
-class Challenge(db.Model):  
-    __tablename__ = "challenge"
+class ChallengeCategory(db.Model):  
+    __tablename__ = "challenge_category"
     id: Mapped[int] = mapped_column(db.Integer, primary_key=True)
     name: Mapped[str] = mapped_column(db.String, unique=True, nullable=False)
 
@@ -26,13 +26,28 @@ class Challenge(db.Model):
         "name": self.name
         }
 
+class Challenge(db.Model):  
+    __tablename__ = "challenge"
+    id: Mapped[int] = mapped_column(db.Integer, primary_key=True)
+    name: Mapped[str] = mapped_column(db.String, unique=True, nullable=False)
+    category: Mapped[str] = mapped_column(db.String, unique=False, nullable=False)  # I have not made this a foreign key of table "challenge_category"
+
+    def to_dict(self):
+        return {
+        "id": self.id,
+        "name": self.name,
+        "category": self.category
+        }
+
 class ChallengeContents(db.Model):
     __tablename__ = "challenge_contents"
+    #I am unsure if the design of this is good practice. Perhaps it would be better to separate markings and comments into two tables for example.
     id: Mapped[int] = mapped_column(db.Integer, primary_key=True)
     challenge_id: Mapped[int] = mapped_column(db.Integer, db.ForeignKey('challenge.id'))
     user: Mapped[str] = mapped_column(db.String, unique=False, nullable=False)
-    mark: Mapped[int] = mapped_column(db.Integer, unique=False, nullable=False)
+    mark: Mapped[int] = mapped_column(db.Integer, unique=False, nullable=True)
     recommended_user: Mapped[str] = mapped_column(db.String, unique=False, nullable=True)  # Could instead store user primary key
+    comment: Mapped[str] = mapped_column(db.String, unique=False, nullable=True)
     
     def to_dict(self):
         return {
@@ -40,9 +55,9 @@ class ChallengeContents(db.Model):
         "challengeId": self.challenge_id,
         "user": self.user,
         "mark": self.mark,
-        "recommended_user": self.recommended_user
+        "recommended_user": self.recommended_user,
+        "comment": self.comment
          }
-
 
 class User(db.Model):
     __tablename__ = "user"
@@ -66,12 +81,10 @@ class User(db.Model):
         "role": self.role
         }
 
-
 class Server(db.Model):
     __tablename__ = "server"
     id: Mapped[int] = mapped_column(db.Integer, primary_key=True)
     message: Mapped[str] = mapped_column(db.String, unique=True, nullable=False)
-
 
 class Site(db.Model):  
     __tablename__ = "site"

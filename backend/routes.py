@@ -10,6 +10,9 @@ import backend.utils as utils
 import backend.db_structure  as DB
 
 
+@app.route("/unauth", methods=["GET"])
+def unauth():
+    return send_from_directory("frontend/static/html", "unauth.html")
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -42,7 +45,8 @@ def login():
 
 @app.route("/", methods=["GET"])
 def index():
-    #if(not utils.is_authenticated(request)): return "UNAUTHENTICATED", 401
+    # if(not utils.is_authenticated(request)): return "UNAUTHENTICATED", 401
+    # return send_from_directory("frontend/static/html", "index.html")
     if(not utils.is_authenticated(request)):
         return send_from_directory("frontend/static/html", "unauth.html")
     else:
@@ -53,26 +57,6 @@ def index():
 # Get much of the database, e.g. all challenges
 @app.route("/api", methods=["GET"])
 def landing():
-#     #Temp backdoor to change user on the fly
-#     auth = request.args.get("auth")
-#     if(auth is not None):
-#         res = make_response()
-#         res.status = 204
-#         cookie_auth_value = "not_set"
-#         cookie_user_value = "not_set"
-#         if(auth == "3"):
-#             cookie_user_value = "mrB4ckd00r"
-#             cookie_auth_value = utils.generate_auth_cookie()
-#             print(f"\033[94mAPP MESSAGE: Backdoor user created   {cookie_user_value} : {cookie_auth_value}\033[0m")
-#             DB.db.session.add(DB.User(username=cookie_user_value, password="unimplemented", session_id=cookie_auth_value, role="participant"))
-#             DB.db.session.commit()
-# 
-#         res.set_cookie("auth", value=cookie_auth_value, max_age=None, expires=None, path='/', secure=None, httponly=True, samesite="Lax")
-#         res.set_cookie("user", value=cookie_user_value, max_age=None, expires=None, path='/', secure=None, httponly=True, samesite="Lax")
-#         return res
-
-
-
     if(not utils.is_authenticated(request)): return "UNAUTHENTICATED", 401 
 
     # If user is authenticated but does not have cookie "user" set to the correct value, Fix that.
@@ -103,34 +87,96 @@ def landing():
     return res
 
 
+# Add a challenge category
+@app.route("/api/add_category", methods=["POST"])
+def add_category():
+    if(not utils.is_authenticated(request)): return "UNAUTHENTICATED", 401
+
+    res = make_response()
+    #ccategory = request.form["ccategory"]      # Deprecated, will cause unhandled 500 if parameter doesnt exist
+    ccategory = request.form.get("ccategory")   # This is the POST parameter the user sends
+    if(ccategory is None):
+        res.data = "Error: expected parameter \"ccategory\" was not received"
+        res.status = 400
+
+    else:  # Attempt to add user-requested category to db
+        if(DB.db.session.query(DB.ChallengeCategory).filter_by(name=ccategory).first() is not None):
+            res.data = "Error: category with that name already exists"
+            res.status = 409
+        else:
+            try:
+                new_category = DB.ChallengeCategory(name=ccategory)
+                DB.db.session.add(new_category)
+                DB.db.session.commit()
+            except Exception as e:      
+                #return jsonify({"Error": str(e)}), 400 #Warning, this gives verbose sql errors
+                res.data = "Error: something went wrong when attempting to add category to database"     # This is not very verbose, for security reasons
+                res.status = 500
+            else:
+                res.data = "Category created succesfully"
+                res.status = 201
+
+    return res
+
+
+# Delete a category
+@app.route("/api/delete_category/<int:c_id>", methods=["DELETE"])
+def delete_category(c_id):
+    if(not utils.is_authenticated(request)): return "UNAUTHENTICATED", 401
+
+    res = make_response()
+    to_del = DB.ChallengeCategory.query.get(c_id)
     
+    if(to_del is None):
+        res.data = f"Error: could not perform deletion on category with id {str(c_id)}, it does not exist in the database"
+        res.status = 404
+
+    elif(DB.Challenge.query.filter_by(category=to_del.name).first() != None):
+        res.data = f"Error: could not delete category, challenges within this category must be deleted first"
+        res.status = 400
+    
+    else:      
+        DB.db.session.delete(to_del)  #Delete category
+        try:
+            DB.db.session.commit()
+        except Exception as e:
+            res.data = f"Error: Unhandled error occurred when attempting to delete category"
+            res.status = 500
+        else:
+            res.data = f"Succesfully deleted category with id {str(c_id)}"
+            res.status = 200
+
+    return res
+
+
+# Add a challenge   
 @app.route("/api/add_challenge", methods=["POST"])
 def add_challenge():
     if(not utils.is_authenticated(request)): return "UNAUTHENTICATED", 401
 
     res = make_response()
-    #cname = request.form["cname"]      # Deprecated, will cause unhandled 500 if parameter doesnt exist
-    cname = request.form.get("cname")   # This is the POST parameter the user sends
-    if(cname is None):
-        res.data = "Error: expected parameter \"cname\" was not received"
+    contents = request.json
+
+    if(DB.db.session.query(DB.ChallengeCategory).filter_by(name=contents["ccategory"]).first() is None):
+        res.data = f"Error: category \"{contents['ccategory']}\" does not exist"
         res.status = 400
 
+    elif(DB.db.session.query(DB.Challenge).filter_by(name=contents["cname"]).first() is not None):
+        res.data = "Error: challenge with that name already exists"
+        res.status = 409
+
     else:  # Attempt to add user-requested challenge to db
-        if(DB.db.session.query(DB.Challenge).filter_by(name=cname).first() is not None):
-            res.data = "Error: challenge with that name already exists"
-            res.status = 409
+        try:
+            new_challenge = DB.Challenge(name=contents["cname"], category=contents["ccategory"])
+            DB.db.session.add(new_challenge)
+            DB.db.session.commit()
+        except Exception as e:      
+            #return jsonify({"Error": str(e)}), 400 #Warning, this gives verbose sql errors
+            res.data = "Error: something went wrong when attempting to add challenge to database"     # This is not very verbose, for security reasons
+            res.status = 500
         else:
-            try:
-                new_challenge = DB.Challenge(name=cname)
-                DB.db.session.add(new_challenge)
-                DB.db.session.commit()
-            except Exception as e:      
-                #return jsonify({"Error": str(e)}), 400 #Warning, this gives verbose sql errors
-                res.data = "Error: something went wrong when attempting to add challenge to database"     # This is not very verbose, for security reasons
-                res.status = 500
-            else:
-                res.data = "Challenge created succesfully"
-                res.status = 201
+            res.data = "Challenge created succesfully"
+            res.status = 201
 
     return res
 
@@ -162,8 +208,8 @@ def delete_challenge(c_id):
 
 
 # Update an existing challenge with a color that user marked it with
-@app.route("/api/update_challenge", methods=["POST"]) 
-def update_challenge():
+@app.route("/api/mark_challenge", methods=["POST"])
+def mark_challenge():
     if(not utils.is_authenticated(request)): return "UNAUTHENTICATED", 401
         
     res = make_response()
@@ -179,7 +225,7 @@ def update_challenge():
         else:
             rec_user = None if content["mark"] != 4 else content["recommendedUser"]
             new_update = DB.ChallengeContents(challenge_id=content["challengeId"], user=requested_by_user, mark=content["mark"], recommended_user=rec_user)
-            existing_row = DB.ChallengeContents.query.filter_by(challenge_id=new_update.challenge_id, user=new_update.user).first()
+            existing_row = DB.ChallengeContents.query.filter(DB.ChallengeContents.challenge_id==new_update.challenge_id, DB.ChallengeContents.user==new_update.user, DB.ChallengeContents.mark!=None).first()
             update_db = True
 
             # 6 means remove marking
@@ -229,6 +275,56 @@ def update_challenge():
 
 
 
+# Add comment to a challenge. This endpoint also serves to delete comment in no comment was submitted. Only 1 comment per person per challenge.
+@app.route("/api/comment_challenge", methods=["POST"])
+def comment_challenge():
+    if(not utils.is_authenticated(request)): return "UNAUTHENTICATED", 401
+        
+    res = make_response()
+    content = request.json  
+        
+    user_cookie = request.cookies.get("auth")
+    requested_by_user = DB.User.query.filter_by(session_id=user_cookie).first().username
+    if(requested_by_user is None):  # This should never happen since 401 will return prior to this
+        res.data = "Error: could not retrieve user associated with request cookie from database"
+        res.status = 500
+
+    else:
+        new_update = DB.ChallengeContents(challenge_id=content["challengeId"], user=requested_by_user, comment=content["comment"])
+        existing_row = DB.ChallengeContents.query.filter(DB.ChallengeContents.challenge_id==new_update.challenge_id, DB.ChallengeContents.user==new_update.user, DB.ChallengeContents.comment!=None).first()
+        update_db = True
+
+        if(new_update.comment == ""):   # If empty comment       
+            if(existing_row is None):   # User attempts to delete a comment which they haven't made
+                res.data = "Error: can not remove non-existent comment"
+                res.status = 400
+                update_db = False
+            else:
+                DB.db.session.delete(existing_row)
+                res.data = "Sucessfully removed comment"
+                res.status = 200 
+
+        # User doesn't have an existing comment, create one       
+        elif(existing_row is None):
+            DB.db.session.add(new_update)
+            res.data = "Succesfully added comment"
+            res.status = 201
+            
+        #If user already made a comment on this challenge, update it
+        else:
+            existing_row.comment = new_update.comment    #Update existing row
+            res.data = "Succesfully updated comment"
+            res.status = 200
+
+
+        if(update_db):   # Not all requests result in the db being updated
+            try:   
+                DB.db.session.commit()
+            except Exception as e:      
+                res.data = "Error: unhandled exception ocurred when attempting to update the database with your comment"
+                res.status = 500
+
+    return res
 
 
 
@@ -335,12 +431,13 @@ def admin_clear_all():
     DB.User.query.filter(DB.User.role != "admin").delete()
     DB.ChallengeContents.query.delete()
     DB.Challenge.query.delete()
+    DB.ChallengeCategory.query.delete()
     try:
         DB.db.session.commit()
     except Exception as e:
         return jsonify({"Error": str(e)}), 500        # WARNING: verbose error
     else:
-        return f"Challenges + non-admin users + ctf title succesfully deleted", 200
+        return f"Categories + challenges + non-admin users + ctf title succesfully deleted", 200
 
 
 

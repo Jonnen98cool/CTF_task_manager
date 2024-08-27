@@ -10,7 +10,7 @@
 	--greenChallenge: DarkGreen;
 	--inputColor: Turquoise;
 
-	--panelHeight: 300px;
+	--panelHeight: 270px;
 }
 
 
@@ -37,12 +37,28 @@ h1,h2,h3,h4,h5,p,span {
 	color: LightGoldenRodYellow;
 }
 
+/*Spicing up the headings*/
+h1 {
+	/* text-shadow: yellow 0px 0px 30px; */
+	font-weight: normal;
+	font-size: 40px;
+	text-shadow: 0 2px black, 5px 7px #400;		
+}
+h2 {
+	margin: 0px;
+	font-size: 25px;
+	text-shadow: yellow 0px 0px 30px;
+}
+h3 {
+	text-shadow: white 1px 1px 7px;
+}
+
 p {
 	margin: 0px;
 }
 
 /* All buttons used */
-button, input[type="submit"], input[type="radio"] {		/*most if these dont apply to radio buttons but eg. cursor:pointer does*/
+button, input[type="submit"], input[type="radio"] {		/*most of these dont apply to radio buttons but eg. cursor:pointer does*/
 	color: LightGoldenRodYellow;
 	/* background-color: SlateGray; */
 	background-color: rgba(80,80,80,1.0);
@@ -59,7 +75,6 @@ button:active, input[type="submit"]:active {	/*Override built-in on-click becaus
 
 /* --- Non-global changes --- */
 
-/*TODO: Would be nice to find a way to spice up the title a little bit more so it isnt just plain text*/
 .pageTitle {
 	display: block;
 	text-align: center;
@@ -80,6 +95,8 @@ button:active, input[type="submit"]:active {	/*Override built-in on-click becaus
 	display: inline-block;
 	border: 5px solid black;
 	background: rgba(40,40,40,0.7);
+	margin: 0px;
+	margin-right: 10px;
 	padding: 10px;
 	vertical-align: top;
 }
@@ -90,15 +107,15 @@ button:active, input[type="submit"]:active {	/*Override built-in on-click becaus
 }
 .panelDiv h3 {
 	margin: 0px;
-	margin-bottom: 10px;
+	margin-bottom: 15px;
 }
 .panelDiv form {
 	margin: 0px;
 	margin-bottom: 15px;
 }
-.panelDiv input[type="text"] {
+.panelDiv select, input[type="text"] {
 	margin: 0px;
-	margin-bottom: 5px;
+	margin-bottom: 7px;
 	/* border-radius: 3px; */
 	background: rgba(50,50,50);
 	color: var(--inputColor);
@@ -107,6 +124,22 @@ button:active, input[type="submit"]:active {	/*Override built-in on-click becaus
 .panelDiv input[type="text"]:focus {	/*Text input on-click*/
 	background: rgba(90,90,90)
 }
+.panelDiv select {
+	display: block;
+	width: 140px;
+	cursor: pointer;
+}
+.panelDiv option {		/*My old version of Firefox overrides this styling */
+	/* font-size: 30px; */
+	background: rgba(60,60,60);
+	color: var(--inputColor);
+	cursor: pointer;
+}
+.panelDiv input[type="submit"] {
+	margin: 0px;
+	margin-top: 3px;
+}
+
 
 #legend {
 	display: inline-block;
@@ -141,15 +174,45 @@ button:active, input[type="submit"]:active {	/*Override built-in on-click becaus
 	display: block;
 }
 
+.categoryDiv {
+	margin: 15px;
+}
+.categoryHeader {
+	display: block;
+	margin: 0px;
+	margin-top: 15px;
+	margin-bottom: 10px;
+	/* margin-left: -10px; */
+}
+.categoryHeading {
+	display: inline;
+	margin: 0px;
+	font-size: 22px;
+
+	/* font-weight: normal; */
+	text-shadow: red 0px 0px 15px;
+}
+.deleteCategoryButton {
+	display: inline;
+	vertical-align: top;
+	padding: 2px;
+	margin: 0px;
+	/* margin-left: 10px; */
+	float: right;
+	/* font-size: 70%; */
+}
+
 .ChallengeBox {
   display: inline-block;
   width: var(--challengeBoxWidth);
   min-height: 155px;		/*Enough to contain 2-row title + 2 non-recommend user markings without expanding*/
+  vertical-align: top;
   border: 4px solid black;
   border-radius: 10px;
   padding: 10px;
   margin: 10px;
   margin-left: 0px;		/*Override to 0, otherwise it looks wack*/
+  margin-top: 0px;
   background-color: var(--greenChallenge);
   overflow: auto;		/*Crucial against OCD.*/
   word-wrap: break-word;
@@ -160,24 +223,28 @@ button:active, input[type="submit"]:active {	/*Override built-in on-click becaus
 	margin: 0px;
 	margin-bottom: 10px;
 }
-.challengeBoxHeader h3 {
+.challengeBoxHeader h4 {
 	margin: 0px;
 	display: inline-block;
-	max-width: calc(var(--challengeBoxWidth) - 45px );	/*Hardcoded latter value, but it ensures that the delete button is always top-right no matter how long the challenge name*/
+	max-width: calc(var(--challengeBoxWidth) - 50px );	/*Hardcoded latter value, but it ensures that the delete button is always top-right no matter how long the challenge name*/
 }
 .challengeBoxHeader .deleteChallengeButton {
 	display: inline-block;
 	float: right;
-	/*vertical-align: bottom;*/		/*This does not work unfortunately, due to the float*/
-	margin-top: 3px;				/*Ugly solution to center it to the text...*/
 	padding: 0px;
 }
 
 
-/*There should probably be a .body div here containing the challenge options including the collapsibles*/
-
+/*Challenge box panel starts*/
 .markAsButton {
-	display: block;  /*On separate row from title and delbutton*/
+	display: inline-block;  /*On separate row from title and delbutton*/
+	margin: 0px;
+	margin-right: 7px;
+}
+.commentButton {
+	display: inline;
+	margin: 0px;
+	margin-right: 7px;
 }
 
 /*In here is some magic to make radio buttons clickable and appear as colored squares*/
@@ -231,6 +298,7 @@ button:active, input[type="submit"]:active {	/*Override built-in on-click becaus
 	float: right;
 	margin: 0px;
 	margin-top: 1px;	/*Another ugly hack because vertical-align wont work with float. At least it's just 1px, right?*/
+	padding: 0px;		/*Make button slightly smaller than parent*/
 }
 
 
@@ -251,6 +319,7 @@ button:active, input[type="submit"]:active {	/*Override built-in on-click becaus
 .userListCollapsible span {
 	/* background-color: var(--inputColor); */
 	color: var(--inputColor);
+	word-break: break-all;
 
 	/*Something like this could be used but the overflow scrollbar is fine I think*/
 	/* display: block; */
@@ -259,17 +328,43 @@ button:active, input[type="submit"]:active {	/*Override built-in on-click becaus
 }
 
 
+.commentCollapsible {
+	margin: 10px;	/*It's slightly indented, looks good*/
+	position: relative;
+
+}
+.commentCollapsible textarea {
+	padding: 5px;
+	height: 100px;
+	width: 73%;
+	margin: 0px;
+	background: rgba(50,50,50);
+	color: var(--inputColor);
+	border: 2px inset DimGray;
+}
+.commentCollapsible textarea:focus {	/*Text input on-click*/
+	background: rgba(90,90,90)
+}
+.submitCommentButton {
+	display: inline;
+	padding: 0px;		/*Make button slightly smaller than parent*/
+	position: absolute;
+	right: 0px;
+	top: 50%;
+	-ms-transform: translateY(-50%);
+	transform: translateY(-50%)
+}
+
+
 
 .userMarkings {
 	display: block;
 	margin: 0px;
 	margin-top: 20px;
-	margin-bottom: 5px;
 }
 .markingsEntry {
 	display: block;
-	/* overflow: auto; */
-	word-wrap: break-word;
+	word-break: break-all;
 }
 .coloredP {
 	display: inline-block;
@@ -279,19 +374,25 @@ button:active, input[type="submit"]:active {	/*Override built-in on-click becaus
 }
 .markingUsernameText {
 	display: inline;
-	/* font-weight: bold; */
+	font-weight: bold;
+	font-size: 14px;
 }
 .markingRecommendText {
 	display: block;
 	font-style: italic;
-	font-size: 13px;
+	font-size: 12px;
 	margin: 0px;
-	margin-left: calc(var(--markingWidth) + 13px);	/*The latter number is hardcoded which I don't like*/
+	margin-left: calc(var(--markingWidth) + 12px);	/*The latter number is hardcoded which I don't like*/
 }
 .markingRecommendUserText {
 	/* font-weight: bold; */
 	margin: 0px;
-	margin-left: calc(var(--markingWidth) + 13px);
+	margin-left: calc(var(--markingWidth) + 12px);	/*TODO: Looks bad if username is long (doesn't respect the indent on 2nd line)*/
+	font-weight: bold;
+	font-size: 14px;
+
+	/* position: relative; */
+  	/* left: calc(var(--markingWidth) + 13px); */
 }
 /*Looks awesome, unfortunately takes up a lot of processing power. Only blink for 4 seconds.*/
 .challengeForYou {
@@ -302,4 +403,32 @@ button:active, input[type="submit"]:active {	/*Override built-in on-click becaus
   50% {
     opacity: 0;
   }
+}
+
+.userComments {
+	display: block;
+	margin: 0px;
+	margin-top: 15px;
+	/*Long usernames don't seem to want to word-wrap break, so these two lines create a horizontal scrollbar if name is too long*/
+  	/* overflow: auto; */
+  	/* word-wrap: break-word; */
+}
+.commentsEntry {
+	display: block;
+	margin: 0px;
+	margin-bottom: 5px;
+	line-height: 80%;
+	word-break: break-word;
+}
+.commentingUsernameText {
+	display: inline-block;
+	font-weight: bold;
+	font-size: 13px;
+	word-break: break-all;	/*Override existing word-break, username should break in a single character*/
+}
+.commentText {
+	display: inline;
+	margin: 0px;
+	margin-left: 5px;			/*A simple SPACE in the HTML would've fixed this but HTML doesn't like space*/
+	font-size: 12px;
 }

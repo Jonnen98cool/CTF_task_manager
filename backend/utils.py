@@ -8,24 +8,28 @@ import backend.db_structure as DB
 
 # Returns challenges and other info as a jsonified Response object   ( in routing you can do: return get_db_as_jsonified() )
 def get_db_as_jsonified():
+    # Site information
+    site_info = DB.Site.query.all()
+    site_info_list = [x.to_dict() for x in site_info]
+    
+    # Challenge categories
+    challenge_categories = DB.ChallengeCategory.query.all()
+    challenge_categories_list = [x.to_dict() for x in challenge_categories]
+    
     # Challenge boxes
     challenges_outer = DB.Challenge.query.all()
     challenges_outer_list = [x.to_dict() for x in challenges_outer]
 
-    # Markings inside challenge boxes
+    # Contents inside challenge boxes
     challenges_inner = DB.ChallengeContents.query.all()  # I wish "id" would appear before "challengeId" in returned json, but alas
     challenges_inner_list = [x.to_dict() for x in challenges_inner]
-
-    # Site information
-    site_info = DB.Site.query.all()
-    site_info_list = [x.to_dict() for x in site_info]
 
     # Users information
     users = DB.User.query.all()
     users_list = [x.to_dict() for x in users]
     only_username = [{"username": x["username"]} for x in users_list]    # I only want the usernames for now
 
-    combined_json = jsonify({"siteInfo": site_info_list, "users": only_username, "challengesOuter": challenges_outer_list, "challengesInner": challenges_inner_list})  # I wish they would return in the order i specified, but it doesn't really matter
+    combined_json = jsonify({"siteInfo": site_info_list, "challengeCategories": challenge_categories_list, "challengesOuter": challenges_outer_list, "challengesInner": challenges_inner_list, "users": only_username})  # I wish they would return in the order i specified, but it doesn't really matter
     return combined_json
 
 
@@ -36,18 +40,24 @@ def init_db(admin_user:str):
         DB.db.create_all()     # Create the database from the tables and other stuff we specified
 
         # Add testing values
-        # DB.db.session.add(DB.Challenge(name="Test challenge 1"))
-        # DB.db.session.add(DB.Challenge(name="Test challenge 2"))
-        # DB.db.session.add(DB.Challenge(name="Test challenge 3"))
-
-        # Add test users
-        # usernames = ["Jonnen98cool", "t3stUs3r"]
-        # passwords = ["p4ssword", "p4ssword"]
-        # auth_cookies = ["unique_cookie_for_Jonnen98cool", "unique_cookie_for_t3stUs3r"]
-        # roles = ["admin", "participant"]
-        # for i in range(len(usernames)):
-        #     DB.db.session.add(DB.User(username=usernames[i], password=passwords[i], auth_cookie=auth_cookies[i], role=roles[i]))
-        #     print(f"Added user: {usernames[i]} (role={roles[i]}) with password: {passwords[i]} and cookie: {auth_cookies[i]}")
+        # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+        # DB.db.session.add(DB.ChallengeCategory(name="Web"))
+        # DB.db.session.add(DB.ChallengeCategory(name="Misc"))
+        # DB.db.session.add(DB.ChallengeCategory(name="Forensics"))
+        # 
+        # DB.db.session.add(DB.Challenge(name="Test challenge 1", category="Web"))
+        # DB.db.session.add(DB.Challenge(name="Test challenge 2", category="Forensics"))
+        # DB.db.session.add(DB.Challenge(name="Test challenge 3", category="Misc"))
+        # DB.db.session.add(DB.Challenge(name="Test challenge 4", category="Web"))
+        # DB.db.session.add(DB.Challenge(name="Test challenge 5", category="Web"))
+        # DB.db.session.add(DB.Challenge(name="Test challenge 6", category="Web"))
+        # DB.db.session.add(DB.Challenge(name="Test challenge 7", category="Misc"))
+        # DB.db.session.add(DB.Challenge(name="Test challenge 8", category="Misc"))
+        # DB.db.session.add(DB.Challenge(name="Test challenge 9", category="Forensics"))
+        # DB.db.session.add(DB.Challenge(name="Test challenge 10", category="Forensics"))
+        # DB.db.session.add(DB.Challenge(name="Test challenge 11", category="Forensics"))
+        # DB.db.session.add(DB.Challenge(name="Test challenge 12", category="Misc"))
+        # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
         # Add admin user
         admin_cookie = generate_auth_cookie()
