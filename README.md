@@ -1,7 +1,8 @@
 # CTF_task_manager
 ## Description
-I got tired of having to constantly ping my friend to check if he had already started on a CTF challenge I wanted to do. So I made this:
-![](https://github.com/Jonnen98cool/CTF_task_manager/blob/main/readme_helper/app_snapshot.png)
+I got tired of having to constantly ping my friend to check if he had already started on a CTF challenge I wanted to do. So I made this:  
+![](https://github.com/Jonnen98cool/CTF_task_manager/blob/main/readme_helper/app_snapshot_v2_1.png)  
+![](https://github.com/Jonnen98cool/CTF_task_manager/blob/main/readme_helper/app_snapshot_v2_2.png)
 
 ## Installation
 You need docker-compose.
